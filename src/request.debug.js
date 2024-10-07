@@ -83,7 +83,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 												} else Storage.setItem("@iRingo.TestFlight.Caches", { ...Caches, ...body }); // Caches空
 											}
 											*/
-											if (Settings.CountryCode !== "AUTO") body.storeFrontIdentifier = body.storeFrontIdentifier.replace(/\d{6}/, Configs.Storefront.get(Settings.CountryCode));
+											if (Settings.CountryCode !== "AUTO") body.storeFrontIdentifier = body.storeFrontIdentifier.replace(/\d{6}/, Configs.Storefront[Settings.CountryCode]);
 											break;
 										case "/v1/properties/testflight":
 											break;
@@ -117,7 +117,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																									break;
 																								case "install":
 																									log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/install`, "");
-																									if (Settings.CountryCode !== "AUTO") body.storefrontId = body.storefrontId.replace(/\d{6}/, Configs.Storefront.get(Settings.CountryCode));
+																									if (Settings.CountryCode !== "AUTO") body.storefrontId = body.storefrontId.replace(/\d{6}/, Configs.Storefront[Settings.CountryCode]);
 																									break;
 																								default:
 																									log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/${PATHs[7]}`, "");
