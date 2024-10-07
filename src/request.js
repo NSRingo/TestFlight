@@ -57,7 +57,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 								case "testflight.apple.com":
 									switch (PATH) {
 										case "/v1/session/authenticate":
-											if (Settings.CountryCode !== "AUTO") body.storeFrontIdentifier = body.storeFrontIdentifier.replace(/\d{6}/, Configs.Storefront.get(Settings.CountryCode));
+											if (Settings.CountryCode !== "AUTO") body.storeFrontIdentifier = body.storeFrontIdentifier.replace(/\d{6}/, Configs.Storefront[Settings.CountryCode]);
 											break;
 										case "/v1/properties/testflight":
 											break;
@@ -88,7 +88,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																								case undefined:
 																									break;
 																								case "install":
-																									if (Settings.CountryCode !== "AUTO") body.storefrontId = body.storefrontId.replace(/\d{6}/, Configs.Storefront.get(Settings.CountryCode));
+																									if (Settings.CountryCode !== "AUTO") body.storefrontId = body.storefrontId.replace(/\d{6}/, Configs.Storefront[Settings.CountryCode]);
 																									break;
 																								default:
 																									break;
