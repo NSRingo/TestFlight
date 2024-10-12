@@ -1,0 +1,23 @@
+#!name = {{@package 'displayName'}}
+#!desc = {{inline (@package 'description')}}
+#!openUrl = {{@package 'openUrl'}}
+#!author = {{@package 'contributors'}}
+#!homepage = {{@package 'homepage'}}
+#!icon = {{@package 'icon'}}
+#!tag = {{@package 'organizationName'}}
+#!system = {{@package 'system'}}
+#!date = {{now "yyyy-MM-dd HH:mm:ss"}}
+#!version = {{@package 'version'}}
+
+[Argument]
+{{{arguments}}}
+
+[General]
+skip-proxy = iosapps.itunes.apple.com
+
+[Script]
+http-request ^https?:\/\/testflight\.apple\.com\/ script-path=https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.js, requires-body=true, tag=✈ TestFlight.request, argument={{{scriptParams}}}
+http-response ^https?:\/\/testflight\.apple\.com\/ script-path=https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.js, requires-body=true, tag=✈ TestFlight.response, argument={{{scriptParams}}}
+
+[MITM]
+hostname = testflight.apple.com
