@@ -12,8 +12,12 @@ export default defineConfig({
 				path: "./dist/TestFlight.stoverride",
 				template: "./template/stash.handlebars",
 			},
+			{
+				path: "./dist/TestFlight.srmodule",
+				template: "./template/shadowrocket.handlebars",
+			},
 		],
-		dts: { isExported: true, path: "./src/settings.ts" },
+		dts: { isExported: true, path: "./src/interface.ts" },
 		boxjsSettings: {
 			path: "./template/boxjs.settings.json",
 			scope: "@iRingo.TestFlight.Settings",

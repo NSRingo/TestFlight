@@ -13,7 +13,7 @@ const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["cont
 log(`⚠ FORMAT: ${FORMAT}`, "");
 !(async () => {
 	/**
-	 * @type {{Settings: import('./settings').Settings}}
+	 * @type {{Settings: import('./interface').Settings}}
 	 */
 	const { Settings, Caches, Configs } = setENV("iRingo", "TestFlight", database);
 	log(`⚠ Settings.Switch: ${Settings?.Switch}`, "");

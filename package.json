@@ -1,6 +1,6 @@
 {
 	"name": "testflight",
-	"version": "3.2.3",
+	"version": "3.2.4",
 	"organizationName": " iRingo",
 	"displayName": " iRingo: ✈ TestFlight",
 	"description": "1.自定义TestFlight登录商店地区\n2.多账户保存及切换(需配置BoxJs使用)\n3.让通用应用在任意苹果处理器设备上可安装",
@@ -38,7 +38,7 @@
 		"iOS >= 15"
 	],
 	"devDependencies": {
-		"@iringo/arguments-builder": "^1.7.0",
+		"@iringo/arguments-builder": "^1.7.3",
 		"@rollup/plugin-commonjs": "^25.0.7",
 		"@rollup/plugin-json": "^6.1.0",
 		"@rollup/plugin-node-resolve": "^15.2.3",
