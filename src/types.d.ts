@@ -1,13 +1,5 @@
 export interface Settings {
     /**
-     * 总功能开关
-     *
-     * 是否启用此APP修改
-     *
-     * @defaultValue true
-     */
-    Switch?: boolean;
-    /**
      * 国家或地区代码
      *
      * 不同国家或地区提供的内容或有差别。
@@ -42,7 +34,7 @@ export interface Settings {
     /**
      * 启用通用应用支持
      *
-     * 是否启用通用应用支持，解除TF中app的iOS/iPadOS/macOS(AppleSilicon)平台限制。
+     * 是否启用通用应用支持，解除 TestFlight app 的 iOS/iPadOS/macOS(AppleSilicon) 平台限制。
      *
      * @defaultValue false
      */

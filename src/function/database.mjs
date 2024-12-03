@@ -1,7 +1,6 @@
 export default {
 	"Testflight": {
 		"Settings": {
-			"Switch": true,
 			"CountryCode": "US",
 			"MultiAccount": false,
 			"Universal": true,
@@ -9,7 +8,6 @@ export default {
 	},
 	"Default": {
 		"Settings": {
-			"Switch": true,
 		},
 		"Configs": {
 			"Storefront": {
