@@ -1,4 +1,4 @@
-import { $platform, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $app, Console, done, fetch, Lodash as _, notification, Storage, time, wait } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
@@ -7,13 +7,13 @@ let $response = undefined;
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ PATHs: ${PATHs}`, "");
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`);
 !(async () => {
 	/**
 	 * @type {{Settings: import('./types').Settings}}
@@ -26,6 +26,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "POST":
 		case "PUT":
 		case "PATCH":
+		// biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
 		case "DELETE":
 			// 格式判断
 			switch (FORMAT) {
@@ -40,7 +41,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/vnd.apple.mpegurl":
 				case "audio/mpegurl":
 					//body = M3U8.parse($request.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = M3U8.stringify(body);
 					break;
 				case "text/xml":
@@ -50,30 +51,30 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 				case "application/plist":
 				case "application/x-plist":
 					//body = XML.parse($request.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = XML.stringify(body);
 					break;
 				case "text/vtt":
 				case "application/vtt":
 					//body = VTT.parse($request.body);
-					//log(`🚧 body: ${JSON.stringify(body)}`, "");
+					//Console.debug(`body: ${JSON.stringify(body)}`);
 					//$request.body = VTT.stringify(body);
 					break;
 				case "text/json":
 				case "application/json":
 					body = JSON.parse($request.body ?? "{}");
-					log(`🚧 body: ${JSON.stringify(body)}`, "");
+					Console.debug(`body: ${JSON.stringify(body)}`);
 					switch (url.hostname) {
 						case "testflight.apple.com":
 							switch (url.pathname) {
 								case "/v1/session/authenticate":
 									/*
 											if (Settings.storeCookies) { // 使用Cookies
-												log(`🚧 storeCookies`, "");
+												Console.debug(`storeCookies`);
 												if (Caches?.dsId && Caches?.storeCookies) { // 有 DS ID和iTunes Store Cookie
-													log(`🚧 有Caches, DS ID和iTunes Store Cookie`, "");
+													Console.debug(`有Caches, DS ID和iTunes Store Cookie`);
 													if (body.dsId !== Caches?.dsId) { // DS ID不相等，覆盖iTunes Store Cookie
-														log(`🚧 DS ID不相等，覆盖DS ID和iTunes Store Cookie`, "");
+														Console.debug(`DS ID不相等，覆盖DS ID和iTunes Store Cookie`);
 														body.dsId = Caches.dsId;
 														body.deviceModel = Caches.deviceModel;
 														body.storeCookies = Caches.storeCookies;
@@ -106,21 +107,21 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 														default:
 															switch (PATHs[3]) {
 																case "apps":
-																	log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/`, "");
+																	Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/`);
 																	switch (PATHs[4]) {
 																		default:
 																			switch (PATHs[5]) {
 																				case "builds":
 																					switch (PATHs[7]) {
 																						case undefined:
-																							log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}`, "");
+																							Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}`);
 																							break;
 																						case "install":
-																							log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/install`, "");
+																							Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/install`);
 																							if (Settings.CountryCode !== "AUTO") body.storefrontId = body.storefrontId.replace(/\d{6}/, Configs.Storefront[Settings.CountryCode]);
 																							break;
 																						default:
-																							log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/${PATHs[7]}`, "");
+																							Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/${PATHs[7]}`);
 																							break;
 																					}
 																					break;
@@ -172,18 +173,16 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 							break;
 						default:
 							// headers auth mod
-							switch (
-								Settings.MultiAccount // MultiAccount
-							) {
-								case true:
-									log(`⚠ 启用多账号支持`, "");
+							switch (Settings.MultiAccount) {
+								case true: {
+									Console.info("启用多账号支持");
 									const IfNoneMatch = $request?.headers?.["If-None-Match"] ?? $request?.headers?.["if-none-match"];
 									const XRequestId = $request?.headers?.["X-Request-Id"] ?? $request?.headers?.["x-request-id"];
 									const XSessionId = $request?.headers?.["X-Session-Id"] ?? $request?.headers?.["x-session-id"];
 									const XSessionDigest = $request?.headers?.["X-Session-Digest"] ?? $request?.headers?.["x-session-digest"];
 									if (Caches.data) {
 										// Caches.data存在
-										log(`⚠ Caches.data存在，读取`, "");
+										Console.info("Caches.data存在，读取");
 										switch (PATHs[0]) {
 											case "v1":
 											case "v2":
@@ -198,14 +197,15 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 															case undefined:
 															default:
 																switch (/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}/.test(PATHs[2])) {
+																	// biome-ignore lint/suspicious/noFallthroughSwitchClause: <explanation>
 																	case true: // PATHs[2]是UUID
-																		log(`⚠ PATHs[2]是UUID，替换url.pathname`, "");
-																		url.pathname = PATH.replace(/\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\//i, `/${Caches.data.accountId}/`);
+																		Console.info("PATHs[2]是UUID，替换url.pathname");
+																		url.pathname = url.pathname.replace(/\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}\//i, `/${Caches.data.accountId}/`);
 																	//break; // 不中断，继续处理
 																	case false: // PATHs[2]不是UUID
 																		if (XSessionId !== Caches.headers["X-Session-Id"]) {
 																			// sessionId不同
-																			log(`⚠ sessionId不同，替换$request.headers`, "");
+																			Console.info("sessionId不同，替换$request.headers");
 																			if (IfNoneMatch) {
 																				delete $request.headers?.["If-None-Match"];
 																				delete $request.headers?.["if-none-match"];
@@ -226,7 +226,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																}
 																break;
 															case Caches?.data?.accountId: // PATHs[2]有UUID且与accountId相同
-																log(`⚠ PATHs[2]与accountId相同，更新Caches`, "");
+																Console.info("PATHs[2]与accountId相同，更新Caches");
 																Caches.headers = {
 																	"X-Request-Id": XRequestId,
 																	"X-Session-Id": XSessionId,
@@ -244,7 +244,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										break;
 									} else {
 										// Caches空
-										log(`⚠ Caches空，新写入`, "");
+										Console.info("Caches空，新写入");
 										Caches.headers = {
 											"X-Request-Id": XRequestId,
 											"X-Session-Id": XSessionId,
@@ -259,6 +259,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										Storage.setItem("@iRingo.TestFlight.Caches", Caches);
 									}
 									break;
+								}
 								case false:
 								default:
 									break;
@@ -273,16 +274,16 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	}
 	$request.url = url.toString();
-	log(`🚧 调试信息`, `$request.url: ${$request.url}`, "");
+	Console.debug(`$request.url: ${$request.url}`);
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => {
-		switch ($response) {
-			default: // 有构造回复数据，返回构造的回复数据
-				//log(`🚧 finally`, `echo $response: ${JSON.stringify($response, null, 2)}`, "");
+		switch (typeof $response) {
+			case "object": // 有构造回复数据，返回构造的回复数据
+				//Console.debug("finally", `echo $response: ${JSON.stringify($response, null, 2)}`);
 				if ($response.headers?.["Content-Encoding"]) $response.headers["Content-Encoding"] = "identity";
 				if ($response.headers?.["content-encoding"]) $response.headers["content-encoding"] = "identity";
-				switch ($platform) {
+				switch ($app) {
 					default:
 						done({ response: $response });
 						break;
@@ -295,9 +296,12 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 						break;
 				}
 				break;
-			case undefined: // 无构造回复数据，发送修改的请求数据
-				//log(`🚧 finally`, `$request: ${JSON.stringify($request, null, 2)}`, "");
+			case "undefined": // 无构造回复数据，发送修改的请求数据
+				//Console.debug("finally", `$request: ${JSON.stringify($request, null, 2)}`);
 				done($request);
+				break;
+			default:
+				Console.error(`不合法的 $response 类型: ${typeof $response}`);
 				break;
 		}
 	});

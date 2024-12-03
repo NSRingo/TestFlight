@@ -1,17 +1,18 @@
-import { $platform, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $app, Console, done, fetch, Lodash as _, notification, Storage, time, wait } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
+Console.debug = () => {};
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ PATHs: ${PATHs}`, "");
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`);
 !(async () => {
 	/**
 	 * @type {{Settings: import('./types').Settings}}
@@ -51,20 +52,18 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 					// 路径判断
 					switch (url.pathname) {
 						case "/v1/session/authenticate":
-							switch (
-								Settings.MultiAccount // MultiAccount
-							) {
-								case true:
-									log(`⚠ 启用多账号支持`, "");
+							switch (Settings.MultiAccount) {
+								case true: {
+									Console.info("启用多账号支持");
 									const XRequestId = $request?.headers?.["X-Request-Id"] ?? $request?.headers?.["x-request-id"];
 									const XSessionId = $request?.headers?.["X-Session-Id"] ?? $request?.headers?.["x-session-id"];
 									const XSessionDigest = $request?.headers?.["X-Session-Digest"] ?? $request?.headers?.["x-session-digest"];
 									if (Caches?.data) {
 										//有data
-										log(`⚠ 有Caches.data`, "");
+										Console.info("有Caches.data");
 										if (body?.data?.accountId === Caches?.data?.accountId) {
 											// Account ID相等，刷新缓存
-											log(`⚠ Account ID相等，刷新缓存`, "");
+											Console.info("Account ID相等，刷新缓存");
 											Caches.headers = {
 												"X-Request-Id": XRequestId,
 												"X-Session-Id": XSessionId,
@@ -77,7 +76,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										}
 									} else {
 										// Caches空
-										log(`⚠ Caches空，写入`, "");
+										Console.info("Caches空，写入");
 										Caches.headers = {
 											"X-Request-Id": XRequestId,
 											"X-Session-Id": XSessionId,
@@ -89,6 +88,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										Storage.setItem("@iRingo.TestFlight.Caches", Caches);
 									}
 									break;
+								}
 								case false:
 								default:
 									break;
@@ -129,18 +129,16 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 														case "apps":
 															switch (PATHs[4]) {
 																case undefined:
-																	switch (
-																		Settings.Universal // 通用
-																	) {
+																	switch (Settings.Universal) {
 																		case true:
-																			log(`🚧 启用通用应用支持`, "");
+																			Console.debug("启用通用应用支持");
 																			if (body.error === null) {
 																				// 数据无错误
-																				log(`🚧 数据无错误`, "");
+																				Console.debug("数据无错误");
 																				body.data = body.data.map(app => {
 																					if (app.previouslyTested !== false) {
 																						// 不是前测试人员
-																						log(`🚧 不是前测试人员`, "");
+																						Console.debug("不是前测试人员");
 																						app.platforms = app.platforms.map(platform => {
 																							platform.build = modBuild(platform.build);
 																							return platform;
@@ -166,10 +164,10 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																						Settings.Universal // 通用
 																					) {
 																						case true:
-																							log(`🚧 启用通用应用支持`, "");
+																							Console.debug("启用通用应用支持");
 																							if (body.error === null) {
 																								// 数据无错误
-																								log(`🚧 数据无错误`, "");
+																								Console.debug("数据无错误");
 																								// 当前Bulid
 																								body.data.currentBuild = modBuild(body.data.currentBuild);
 																								// Build列表
@@ -207,10 +205,10 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																												Settings.Universal // 通用
 																											) {
 																												case true:
-																													log(`🚧 启用通用应用支持`, "");
+																													Console.debug("启用通用应用支持");
 																													if (body.error === null) {
 																														// 数据无错误
-																														log(`🚧 数据无错误`, "");
+																														Console.debug("数据无错误");
 																														// 当前Bulid
 																														body.data = body.data.map(data => modBuild(data));
 																													}
@@ -293,7 +291,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	}
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => done($response));
 
 /***************** Function *****************/
@@ -304,24 +302,21 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
  * @return {Object}
  */
 function modBuild(build) {
+	Console.debug(build.platform || build.name);
 	switch (build.platform || build.name) {
 		case "ios":
-			log(`🚧 ios`, "");
 			build = Build(build);
 			break;
 		case "osx":
-			log(`🚧 osx`, "");
 			if (build?.macBuildCompatibility?.runsOnAppleSilicon === true) {
 				// 是苹果芯片
-				log(`🚧 runsOnAppleSilicon`, "");
+				Console.debug("runsOnAppleSilicon");
 				build = Build(build);
 			}
 			break;
 		case "appletvos":
-			log(`🚧 appletvos`, "");
 			break;
 		default:
-			log(`🚧 unknown platform: ${build.platform || build.name}`, "");
 			break;
 	}
 	return build;

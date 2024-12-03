@@ -1,17 +1,17 @@
-import { $platform, _, Storage, fetch, notification, log, logError, wait, done, getScript, runScript } from "./utils/utils.mjs";
+import { $app, Console, done, fetch, Lodash as _, notification, Storage, time, wait } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
-log(`⚠ url: ${url.toJSON()}`, "");
+Console.info(`url: ${url.toJSON()}`);
 // 获取连接参数
 const PATHs = url.pathname.split("/").filter(Boolean);
-log(`⚠ PATHs: ${PATHs}`, "");
+Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($response.headers?.["Content-Type"] ?? $response.headers?.["content-type"])?.split(";")?.[0];
-log(`⚠ FORMAT: ${FORMAT}`, "");
+Console.info(`FORMAT: ${FORMAT}`);
 !(async () => {
 	/**
 	 * @type {{Settings: import('./types').Settings}}
@@ -32,7 +32,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/vnd.apple.mpegurl":
 		case "audio/mpegurl":
 			//body = M3U8.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			//$response.body = M3U8.stringify(body);
 			break;
 		case "text/xml":
@@ -42,39 +42,37 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 		case "application/plist":
 		case "application/x-plist":
 			//body = XML.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			//$response.body = XML.stringify(body);
 			break;
 		case "text/vtt":
 		case "application/vtt":
 			//body = VTT.parse($response.body);
-			//log(`🚧 body: ${JSON.stringify(body)}`, "");
+			//Console.debug(`body: ${JSON.stringify(body)}`);
 			//$response.body = VTT.stringify(body);
 			break;
 		case "text/json":
 		case "application/json":
 			body = JSON.parse($response.body ?? "{}");
-			log(`🚧 body: ${JSON.stringify(body)}`, "");
+			Console.debug(`body: ${JSON.stringify(body)}`);
 			// 主机判断
 			switch (url.hostname) {
 				case "testflight.apple.com":
 					// 路径判断
 					switch (url.pathname) {
 						case "/v1/session/authenticate":
-							switch (
-								Settings.MultiAccount // MultiAccount
-							) {
-								case true:
-									log(`⚠ 启用多账号支持`, "");
+							switch (Settings.MultiAccount) {
+								case true: {
+									Console.info("启用多账号支持");
 									const XRequestId = $request?.headers?.["X-Request-Id"] ?? $request?.headers?.["x-request-id"];
 									const XSessionId = $request?.headers?.["X-Session-Id"] ?? $request?.headers?.["x-session-id"];
 									const XSessionDigest = $request?.headers?.["X-Session-Digest"] ?? $request?.headers?.["x-session-digest"];
 									if (Caches?.data) {
 										//有data
-										log(`⚠ 有Caches.data`, "");
+										Console.info("有Caches.data");
 										if (body?.data?.accountId === Caches?.data?.accountId) {
 											// Account ID相等，刷新缓存
-											log(`⚠ Account ID相等，刷新缓存`, "");
+											Console.info("Account ID相等，刷新缓存");
 											Caches.headers = {
 												"X-Request-Id": XRequestId,
 												"X-Session-Id": XSessionId,
@@ -86,14 +84,14 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 											Storage.setItem("@iRingo.TestFlight.Caches", Caches);
 										}
 										/*
-												else { // Account ID不相等，覆盖
-													log(`⚠ Account ID不相等，覆盖data(accountId和sessionId)`, "");
-													body.data = Caches.data;
-												}
-												*/
+										else { // Account ID不相等，覆盖
+											Console.info(`Account ID不相等，覆盖data(accountId和sessionId)`);
+											body.data = Caches.data;
+										}
+										*/
 									} else {
 										// Caches空
-										log(`⚠ Caches空，写入`, "");
+										Console.info("Caches空，写入");
 										Caches.headers = {
 											"X-Request-Id": XRequestId,
 											"X-Session-Id": XSessionId,
@@ -105,6 +103,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 										Storage.setItem("@iRingo.TestFlight.Caches", Caches);
 									}
 									break;
+								}
 								case false:
 								default:
 									break;
@@ -126,17 +125,17 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 												case "settings":
 													switch (PATHs[3]) {
 														case undefined:
-															log(`🚧 /${PATHs[0]}/accounts/settings`, "");
+															Console.debug(`/${PATHs[0]}/accounts/settings`);
 															break;
 														case "notifications":
 															switch (PATHs[4]) {
 																case "apps":
-																	log(`🚧 /${PATHs[0]}/accounts/settings/notifications/apps/`, "");
+																	Console.debug(`/${PATHs[0]}/accounts/settings/notifications/apps/`);
 																	break;
 															}
 															break;
 														default:
-															log(`🚧 /${PATHs[0]}/accounts/settings/${PATHs[3]}/`, "");
+															Console.debug(`/${PATHs[0]}/accounts/settings/${PATHs[3]}/`);
 															break;
 													}
 													break;
@@ -144,25 +143,23 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 												default:
 													switch (PATHs[3]) {
 														case undefined:
-															log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}`, "");
+															Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}`);
 															break;
 														case "apps":
-															log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/`, "");
+															Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/`);
 															switch (PATHs[4]) {
 																case undefined:
-																	log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps`, "");
-																	switch (
-																		Settings.Universal // 通用
-																	) {
+																	Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps`);
+																	switch (Settings.Universal) {
 																		case true:
-																			log(`🚧 启用通用应用支持`, "");
+																			Console.debug("启用通用应用支持");
 																			if (body.error === null) {
 																				// 数据无错误
-																				log(`🚧 数据无错误`, "");
+																				Console.debug("数据无错误");
 																				body.data = body.data.map(app => {
 																					if (app.previouslyTested !== false) {
 																						// 不是前测试人员
-																						log(`🚧 不是前测试人员`, "");
+																						Console.debug("不是前测试人员");
 																						app.platforms = app.platforms.map(platform => {
 																							platform.build = modBuild(platform.build);
 																							return platform;
@@ -180,20 +177,20 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																default:
 																	switch (PATHs[5]) {
 																		case undefined:
-																			log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}`, "");
+																			Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}`);
 																			break;
 																		case "builds":
 																			switch (PATHs[7]) {
 																				case undefined:
-																					log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}`, "");
+																					Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}`);
 																					switch (
 																						Settings.Universal // 通用
 																					) {
 																						case true:
-																							log(`🚧 启用通用应用支持`, "");
+																							Console.debug("启用通用应用支持");
 																							if (body.error === null) {
 																								// 数据无错误
-																								log(`🚧 数据无错误`, "");
+																								Console.debug("数据无错误");
 																								// 当前Bulid
 																								body.data.currentBuild = modBuild(body.data.currentBuild);
 																								// Build列表
@@ -206,10 +203,10 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																					}
 																					break;
 																				case "install":
-																					log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/install`, "");
+																					Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/install`);
 																					break;
 																				default:
-																					log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/${PATHs[7]}`, "");
+																					Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}/${PATHs[7]}`);
 																					break;
 																			}
 																			break;
@@ -221,25 +218,25 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																				default:
 																					switch (PATHs[7]) {
 																						case undefined:
-																							log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}`, "");
+																							Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}`);
 																							break;
 																						case "trains":
 																							switch (PATHs[9]) {
 																								case undefined:
-																									log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}`, "");
+																									Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}`);
 																									break;
 																								case "builds":
 																									switch (PATHs[10]) {
 																										case undefined:
-																											log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/builds`, "");
+																											Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/builds`);
 																											switch (
 																												Settings.Universal // 通用
 																											) {
 																												case true:
-																													log(`🚧 启用通用应用支持`, "");
+																													Console.debug("启用通用应用支持");
 																													if (body.error === null) {
 																														// 数据无错误
-																														log(`🚧 数据无错误`, "");
+																														Console.debug("数据无错误");
 																														// 当前Bulid
 																														body.data = body.data.map(data => modBuild(data));
 																													}
@@ -250,31 +247,31 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 																											}
 																											break;
 																										default:
-																											log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/builds/${PATHs[10]}`, "");
+																											Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/builds/${PATHs[10]}`);
 																											break;
 																									}
 																									break;
 																								default:
-																									log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/${PATHs[9]}`, "");
+																									Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/${PATHs[9]}`);
 																									break;
 																							}
 																							break;
 																						default:
-																							log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/${PATHs[7]}`, "");
+																							Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/${PATHs[7]}`);
 																							break;
 																					}
 																					break;
 																			}
 																			break;
 																		default:
-																			log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/${PATHs[5]}`, "");
+																			Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/${PATHs[5]}`);
 																			break;
 																	}
 																	break;
 															}
 															break;
 														default:
-															log(`🚧 /${PATHs[0]}/accounts/${PATHs[2]}/${PATHs[3]}/`, "");
+															Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/${PATHs[3]}/`);
 															break;
 													}
 													break;
@@ -285,13 +282,13 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 												case "install":
 													switch (PATHs[4]) {
 														case undefined:
-															log(`🚧 /${PATHs[0]}/apps/install`, "");
+															Console.debug(`/${PATHs[0]}/apps/install`);
 															break;
 														case "status":
-															log(`🚧 /${PATHs[0]}/apps/install/status`, "");
+															Console.debug(`/${PATHs[0]}/apps/install/status`);
 															break;
 														default:
-															log(`🚧 /${PATHs[0]}/apps/install/${PATHs[4]}`, "");
+															Console.debug(`/${PATHs[0]}/apps/install/${PATHs[4]}`);
 															break;
 													}
 													break;
@@ -301,16 +298,16 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 											switch (PATHs[2]) {
 												case Caches?.data?.accountId: // UUID
 												default:
-													log(`🚧 /${PATHs[0]}/messages/${PATHs[2]}`, "");
+													Console.debug(`/${PATHs[0]}/messages/${PATHs[2]}`);
 													switch (PATHs[3]) {
 														case undefined:
-															log(`🚧 /${PATHs[0]}/messages/${PATHs[2]}`, "");
+															Console.debug(`/${PATHs[0]}/messages/${PATHs[2]}`);
 															break;
 														case "read":
-															log(`🚧 /${PATHs[0]}/messages/${PATHs[2]}/read`, "");
+															Console.debug(`/${PATHs[0]}/messages/${PATHs[2]}/read`);
 															break;
 														default:
-															log(`🚧 /${PATHs[0]}/messages/${PATHs[2]}/${PATHs[3]}`, "");
+															Console.debug(`/${PATHs[0]}/messages/${PATHs[2]}/${PATHs[3]}`);
 															break;
 													}
 													break;
@@ -334,7 +331,7 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
 			break;
 	}
 })()
-	.catch(e => logError(e))
+	.catch(e => Console.error(e))
 	.finally(() => done($response));
 
 /***************** Function *****************/
@@ -345,24 +342,21 @@ log(`⚠ FORMAT: ${FORMAT}`, "");
  * @return {Object}
  */
 function modBuild(build) {
+	Console.debug(build.platform || build.name);
 	switch (build.platform || build.name) {
 		case "ios":
-			log(`🚧 ios`, "");
 			build = Build(build);
 			break;
 		case "osx":
-			log(`🚧 osx`, "");
 			if (build?.macBuildCompatibility?.runsOnAppleSilicon === true) {
 				// 是苹果芯片
-				log(`🚧 runsOnAppleSilicon`, "");
+				Console.debug("runsOnAppleSilicon");
 				build = Build(build);
 			}
 			break;
 		case "appletvos":
-			log(`🚧 appletvos`, "");
 			break;
 		default:
-			log(`🚧 unknown platform: ${build.platform || build.name}`, "");
 			break;
 	}
 	return build;
