@@ -19,20 +19,20 @@ http:
     - "testflight.apple.com"
   script:
     - match: ^https?:\/\/testflight\.apple\.com\/
-      name: TestFlight.request
+      name: ✈ TestFlight.request
       type: request
       require-body: true
       argument:
     - match: ^https?:\/\/testflight\.apple\.com\/
-      name: TestFlight.response
+      name: ✈ TestFlight.response
       type: response
       require-body: true
       argument:
 
 script-providers:
-  TestFlight.request:
-    url: https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.js
+  ✈ TestFlight.request:
+    url: https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.bundle.js
     interval: 86400
-  TestFlight.response:
-    url: https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.js
+  ✈ TestFlight.response:
+    url: https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.bundle.js
     interval: 86400

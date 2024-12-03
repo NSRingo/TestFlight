@@ -1,10 +1,9 @@
 {
 	"name": "testflight",
-	"version": "3.2.4",
 	"organizationName": " iRingo",
 	"displayName": " iRingo: ✈ TestFlight",
 	"description": "1.自定义TestFlight登录商店地区\n2.多账户保存及切换(需配置BoxJs使用)\n3.让通用应用在任意苹果处理器设备上可安装",
-	"homepage": "https://github.com/NSRingo/TestFlight/wiki",
+	"homepage": "https://NSRingo.github.io/guide/test-flight",
 	"openUrl": "http://boxjs.com/#/app/iRingo.TestFlight",
 	"icon": "https://developer.apple.com/assets/elements/icons/testflight/testflight-128x128.png",
 	"keywords": [],
@@ -29,8 +28,8 @@
 		"example": "example"
 	},
 	"scripts": {
-		"build": "rollup -c",
-		"build:debug": "rollup --config --configDebug",
+		"build": "rspack build",
+		"build:dev": "rspack build -c rspack.dev.config.js --mode=development",
 		"build:args": "arguments-builder build",
 		"dts": "arguments-builder dts"
 	},
@@ -39,10 +38,8 @@
 	],
 	"devDependencies": {
 		"@iringo/arguments-builder": "^1.7.3",
-		"@rollup/plugin-commonjs": "^25.0.7",
-		"@rollup/plugin-json": "^6.1.0",
-		"@rollup/plugin-node-resolve": "^15.2.3",
-		"@rollup/plugin-terser": "^0.4.4",
-		"rollup": "^4.9.6"
+		"@rspack/cli": "^1.1.4",
+		"@rspack/core": "^1.1.4",
+		"node-polyfill-webpack-plugin": "^4.0.0"
 	}
 }

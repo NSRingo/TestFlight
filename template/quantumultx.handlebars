@@ -10,8 +10,8 @@
 
 #[rewrite_local]
 # ✈ TestFlight
-^https?:\/\/testflight\.apple\.com\/ url script-request-body https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.js
-^https?:\/\/testflight\.apple\.com\/ url script-response-body https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.js
+^https?:\/\/testflight\.apple\.com\/ url script-request-body https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.bundle.js
+^https?:\/\/testflight\.apple\.com\/ url script-response-body https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.bundle.js
 
 #[mitm]
 hostname = testflight.apple.com

@@ -16,8 +16,8 @@
 skip-proxy = iosapps.itunes.apple.com
 
 [Script]
-http-request ^https?:\/\/testflight\.apple\.com\/ script-path=https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.js, requires-body=true, tag=✈ TestFlight.request, argument={{{scriptParams}}}
-http-response ^https?:\/\/testflight\.apple\.com\/ script-path=https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.js, requires-body=true, tag=✈ TestFlight.response, argument={{{scriptParams}}}
+http-request ^https?:\/\/testflight\.apple\.com\/ script-path=https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/request.bundle.js, requires-body=true, tag=✈ TestFlight.request, argument={{{scriptParams}}}
+http-response ^https?:\/\/testflight\.apple\.com\/ script-path=https://github.com/NSRingo/TestFlight/releases/download/v{{@package 'version'}}/response.bundle.js, requires-body=true, tag=✈ TestFlight.response, argument={{{scriptParams}}}
 
 [MITM]
 hostname = testflight.apple.com
