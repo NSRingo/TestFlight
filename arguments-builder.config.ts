@@ -1,8 +1,15 @@
 import { defineConfig } from "@iringo/arguments-builder";
 export default defineConfig({
 	output: {
-		surge: { path: "./dist/TestFlight.sgmodule" },
-		loon: { path: "./dist/TestFlight.plugin" },
+		surge: { path: "./dist/TestFlight.sgmodule",
+			transformEgern: {
+				enable: true,
+				path: "./dist/WeatherKit.yaml",
+			},
+		 },
+		loon: {
+			path: "./dist/TestFlight.plugin"
+		},
 		customItems: [
 			{
 				path: "./dist/TestFlight.snippet",
@@ -17,21 +24,16 @@ export default defineConfig({
 				template: "./template/shadowrocket.handlebars",
 			},
 		],
-		dts: { isExported: true, path: "./src/interface.ts" },
+		dts: {
+			isExported: true,
+			path: "./src/types.d.ts",
+		},
 		boxjsSettings: {
 			path: "./template/boxjs.settings.json",
 			scope: "@iRingo.TestFlight.Settings",
 		},
 	},
 	args: [
-		{
-			key: "Switch",
-			name: "总功能开关",
-			defaultValue: true,
-			type: "boolean",
-			description: "是否启用此APP修改",
-			exclude: ["surge", "loon"],
-		},
 		{
 			key: "CountryCode",
 			name: "国家或地区代码",
@@ -66,7 +68,7 @@ export default defineConfig({
 			defaultValue: false,
 			type: "boolean",
 			description:
-				"是否启用通用应用支持，解除TF中app的iOS/iPadOS/macOS(AppleSilicon)平台限制。",
+				"是否启用通用应用支持，解除 TestFlight app 的 iOS/iPadOS/macOS(AppleSilicon) 平台限制。",
 		},
 	],
 });
