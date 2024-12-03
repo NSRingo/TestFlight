@@ -41,5 +41,8 @@
 		"@rspack/cli": "^1.1.4",
 		"@rspack/core": "^1.1.4",
 		"node-polyfill-webpack-plugin": "^4.0.0"
+	},
+	"dependencies": {
+		"@nsnanocat/url": "^1.2.3"
 	}
 }
