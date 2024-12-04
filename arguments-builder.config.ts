@@ -1,26 +1,26 @@
 import { defineConfig } from "@iringo/arguments-builder";
 export default defineConfig({
 	output: {
-		surge: { path: "./dist/TestFlight.sgmodule",
+		surge: { path: "./dist/iRingo.TestFlight.sgmodule",
 			transformEgern: {
 				enable: true,
-				path: "./dist/WeatherKit.yaml",
+				path: "./dist/iRingo.TestFlight.yaml",
 			},
 		 },
 		loon: {
-			path: "./dist/TestFlight.plugin"
+			path: "./dist/iRingo.TestFlight.plugin"
 		},
 		customItems: [
 			{
-				path: "./dist/TestFlight.snippet",
+				path: "./dist/iRingo.TestFlight.snippet",
 				template: "./template/quantumultx.handlebars",
 			},
 			{
-				path: "./dist/TestFlight.stoverride",
+				path: "./dist/iRingo.TestFlight.stoverride",
 				template: "./template/stash.handlebars",
 			},
 			{
-				path: "./dist/TestFlight.srmodule",
+				path: "./dist/iRingo.TestFlight.srmodule",
 				template: "./template/shadowrocket.handlebars",
 			},
 		],

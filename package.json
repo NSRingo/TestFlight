@@ -1,5 +1,5 @@
 {
-	"name": "testflight",
+	"name": "@nsringo/testflight",
 	"organizationName": " iRingo",
 	"displayName": " iRingo: ✈ TestFlight",
 	"description": "1.自定义TestFlight登录商店地区\n2.多账户保存及切换(需配置BoxJs使用)\n3.让通用应用在任意苹果处理器设备上可安装",
@@ -43,7 +43,7 @@
 		"node-polyfill-webpack-plugin": "^4.0.0"
 	},
 	"dependencies": {
-		"@nsnanocat/url": "^1.2.3",
-		"@nsnanocat/util": "^1.6.4"
+		"@nsnanocat/url": "^1.2.4",
+		"@nsnanocat/util": "^1.7.3"
 	}
 }
