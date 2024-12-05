@@ -1,7 +1,8 @@
-import { $app, Console, done, fetch, Lodash as _, notification, Storage, time, wait } from "@nsnanocat/util";
+import { Console, done, Lodash as _, Storage } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
+Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
