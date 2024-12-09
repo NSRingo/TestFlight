@@ -36,7 +36,25 @@ export interface Settings {
      *
      * 是否启用通用应用支持，解除 TestFlight app 的 iOS/iPadOS/macOS(AppleSilicon) 平台限制。
      *
-     * @defaultValue false
+     * @defaultValue true
      */
     Universal?: boolean;
+    /**
+     * [调试] 日志等级
+     *
+     * 选择脚本日志的输出等级，低于所选等级的日志将全部输出。
+     *
+     * @remarks
+     *
+     * Possible values:
+     * - `'OFF'` - 关闭
+     * - `'ERROR'` - ❌ 错误
+     * - `'WARN'` - ⚠️ 警告
+     * - `'INFO'` - ℹ️ 信息
+     * - `'DEBUG'` - 🅱️ 调试
+     * - `'ALL'` - 全部
+     *
+     * @defaultValue "WARN"
+     */
+    LogLevel?: 'OFF' | 'ERROR' | 'WARN' | 'INFO' | 'DEBUG' | 'ALL';
 }

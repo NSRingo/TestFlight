@@ -5,7 +5,6 @@ import setENV from "./function/setENV.mjs";
 // 构造回复数据
 // biome-ignore lint/style/useConst: <explanation>
 let $response = undefined;
-Console.logLevel = "DEBUG";
 /***************** Processing *****************/
 // 解构URL
 const url = new URL($request.url);
@@ -16,11 +15,12 @@ Console.info(`PATHs: ${PATHs}`);
 // 解析格式
 const FORMAT = ($request.headers?.["Content-Type"] ?? $request.headers?.["content-type"])?.split(";")?.[0];
 Console.info(`FORMAT: ${FORMAT}`);
-!(async () => {
+(async () => {
 	/**
 	 * @type {{Settings: import('./types').Settings}}
 	 */
 	const { Settings, Caches, Configs } = setENV("iRingo", "TestFlight", database);
+	Console.logLevel = Settings.LogLevel;
 	// 创建空数据
 	let body = {};
 	// 方法判断
@@ -71,21 +71,21 @@ Console.info(`FORMAT: ${FORMAT}`);
 							switch (url.pathname) {
 								case "/v1/session/authenticate":
 									/*
-											if (Settings.storeCookies) { // 使用Cookies
-												Console.debug(`storeCookies`);
-												if (Caches?.dsId && Caches?.storeCookies) { // 有 DS ID和iTunes Store Cookie
-													Console.debug(`有Caches, DS ID和iTunes Store Cookie`);
-													if (body.dsId !== Caches?.dsId) { // DS ID不相等，覆盖iTunes Store Cookie
-														Console.debug(`DS ID不相等，覆盖DS ID和iTunes Store Cookie`);
-														body.dsId = Caches.dsId;
-														body.deviceModel = Caches.deviceModel;
-														body.storeCookies = Caches.storeCookies;
-														body.deviceVendorId = Caches.deviceVendorId;
-														body.deviceName = Caches.deviceName;
-													} else Storage.setItem("@iRingo.TestFlight.Caches", { ...Caches, ...body }); // DS ID相等，刷新缓存
-												} else Storage.setItem("@iRingo.TestFlight.Caches", { ...Caches, ...body }); // Caches空
-											}
-											*/
+									if (Settings.storeCookies) { // 使用Cookies
+										Console.debug(`storeCookies`);
+										if (Caches?.dsId && Caches?.storeCookies) { // 有 DS ID和iTunes Store Cookie
+											Console.debug(`有Caches, DS ID和iTunes Store Cookie`);
+											if (body.dsId !== Caches?.dsId) { // DS ID不相等，覆盖iTunes Store Cookie
+												Console.debug(`DS ID不相等，覆盖DS ID和iTunes Store Cookie`);
+												body.dsId = Caches.dsId;
+												body.deviceModel = Caches.deviceModel;
+												body.storeCookies = Caches.storeCookies;
+												body.deviceVendorId = Caches.deviceVendorId;
+												body.deviceName = Caches.deviceName;
+											} else Storage.setItem("@iRingo.TestFlight.Caches", { ...Caches, ...body }); // DS ID相等，刷新缓存
+										} else Storage.setItem("@iRingo.TestFlight.Caches", { ...Caches, ...body }); // Caches空
+									}
+									*/
 									if (Settings.CountryCode !== "AUTO") body.storeFrontIdentifier = body.storeFrontIdentifier.replace(/\d{6}/, Configs.Storefront[Settings.CountryCode]);
 									break;
 								case "/v1/properties/testflight":
@@ -156,7 +156,6 @@ Console.info(`FORMAT: ${FORMAT}`);
 		case "GET":
 		case "HEAD":
 		case "OPTIONS":
-		case undefined: // QX牛逼，script-echo-response不返回method
 		default:
 			// 主机判断
 			switch (url.hostname) {
