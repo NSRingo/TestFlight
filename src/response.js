@@ -76,7 +76,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 										}
 									} else {
 										// Caches空
-										Console.info("Caches空，写入");
+										Console.debug("Caches空，写入");
 										Caches.headers = {
 											"X-Request-Id": XRequestId,
 											"X-Session-Id": XSessionId,
@@ -131,7 +131,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																case undefined:
 																	switch (Settings.Universal) {
 																		case true:
-																			Console.debug("启用通用应用支持");
+																			Console.info("启用通用应用支持");
 																			if (body.error === null) {
 																				// 数据无错误
 																				Console.debug("数据无错误");
@@ -160,11 +160,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 																		case "builds":
 																			switch (PATHs[7]) {
 																				case undefined:
-																					switch (
-																						Settings.Universal // 通用
-																					) {
+																					switch (Settings.Universal) {
 																						case true:
-																							Console.debug("启用通用应用支持");
+																							Console.info("启用通用应用支持");
 																							if (body.error === null) {
 																								// 数据无错误
 																								Console.debug("数据无错误");
@@ -201,11 +199,9 @@ Console.info(`FORMAT: ${FORMAT}`);
 																								case "builds":
 																									switch (PATHs[10]) {
 																										case undefined:
-																											switch (
-																												Settings.Universal // 通用
-																											) {
+																											switch (Settings.Universal) {
 																												case true:
-																													Console.debug("启用通用应用支持");
+																													Console.info("启用通用应用支持");
 																													if (body.error === null) {
 																														// 数据无错误
 																														Console.debug("数据无错误");
@@ -235,6 +231,32 @@ Console.info(`FORMAT: ${FORMAT}`);
 																		default:
 																			break;
 																	}
+																	break;
+															}
+															break;
+														case "ru":
+															switch (Settings.AlwaysShowInstall) {
+																case true:
+																	Console.info("总是显示安装选项");
+																	switch (body.data?.status) {
+																		case "OPEN":
+																			break;
+																		case "FULL":
+																			body.data.status = "OPEN";
+																			//body.data.message = "此 Beta 版本的测试员已满。";
+																			body.data.app.eligibility = {
+																				status: "NO_CRITERIA",
+																				criteria: null,
+																			};
+																			break;
+																		case undefined:
+																		default:
+																			break;
+																	}
+																	break;
+																case false:
+																default:
+																	Console.info("不显示安装选项");
 																	break;
 															}
 															break;

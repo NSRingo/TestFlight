@@ -4,6 +4,7 @@ export default {
 			CountryCode: "US",
 			MultiAccount: false,
 			Universal: true,
+			AlwaysShowInstall: false,
 		},
 	},
 	Default: {

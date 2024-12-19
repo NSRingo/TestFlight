@@ -1,14 +1,15 @@
 import { defineConfig } from "@iringo/arguments-builder";
 export default defineConfig({
 	output: {
-		surge: { path: "./dist/iRingo.TestFlight.sgmodule",
+		surge: {
+			path: "./dist/iRingo.TestFlight.sgmodule",
 			transformEgern: {
 				enable: true,
 				path: "./dist/iRingo.TestFlight.yaml",
 			},
-		 },
+		},
 		loon: {
-			path: "./dist/iRingo.TestFlight.plugin"
+			path: "./dist/iRingo.TestFlight.plugin",
 		},
 		customItems: [
 			{
@@ -60,15 +61,21 @@ export default defineConfig({
 			name: "启用多账号支持",
 			defaultValue: false,
 			type: "boolean",
-			description: "是否启用多账号支持，会自动保存保存更新当前账号信息。",
+			description: "启用多账号支持会自动保存保存更新当前账号信息。",
 		},
 		{
 			key: "Universal",
 			name: "启用通用应用支持",
 			defaultValue: true,
 			type: "boolean",
-			description:
-				"是否启用通用应用支持，解除 TestFlight app 的 iOS/iPadOS/macOS(AppleSilicon) 平台限制。",
+			description: "启用通用应用支持会解除 TestFlight app 的 iOS/iPadOS/macOS(AppleSilicon) 平台限制。",
+		},
+		{
+			key: "AlwaysShowInstall",
+			name: "总是显示安装选项",
+			defaultValue: false,
+			type: "boolean",
+			description: "当 Testflight 无法加入时，也总是显示app详情页面的安装选项。",
 		},
 		{
 			key: "LogLevel",
@@ -77,7 +84,7 @@ export default defineConfig({
 			defaultValue: "WARN",
 			description: "选择脚本日志的输出等级，低于所选等级的日志将全部输出。",
 			options: [
-				{ key: "OFF", label: "关闭" },
+				{ key: "OFF", label: "🔴 关闭" },
 				{ key: "ERROR", label: "❌ 错误" },
 				{ key: "WARN", label: "⚠️ 警告" },
 				{ key: "INFO", label: "ℹ️ 信息" },
