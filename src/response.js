@@ -238,6 +238,23 @@ Console.info(`FORMAT: ${FORMAT}`);
 																	break;
 															}
 															break;
+														case "ru":
+															switch (body.data?.status) {
+																case "OPEN":
+																	break;
+																case "FULL":
+																	body.data.status = "OPEN";
+																	//body.data.message = "此 Beta 版本的测试员已满。";
+																	body.data.app.eligibility = {
+																		status: "NO_CRITERIA",
+																		criteria: null,
+																	};
+																	break;
+																case undefined:
+																default:
+																	break;
+															}
+															break;
 														default:
 															break;
 													}
