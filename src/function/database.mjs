@@ -5,6 +5,7 @@ export default {
 			MultiAccount: false,
 			Universal: true,
 			AlwaysShowInstall: false,
+			MergeNotifications: false,
 		},
 	},
 	Default: {

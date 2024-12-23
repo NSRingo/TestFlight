@@ -78,6 +78,13 @@ export default defineConfig({
 			description: "当 Testflight 无法加入时，也总是显示app详情页面的安装选项。",
 		},
 		{
+			key: "MergeNotifications",
+			name: "合并通知开关",
+			defaultValue: false,
+			type: "boolean",
+			description: "同步开关全平台的电子邮件通知，如关闭 iOS 的 Testflight 更新电子邮件通知，也会同时关闭 tvOS 的 Testflight 更新电子邮件通知。",
+		},
+		{
 			key: "LogLevel",
 			name: "[调试] 日志等级",
 			type: "string",

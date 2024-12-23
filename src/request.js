@@ -2,6 +2,7 @@ import { $app, Console, done, Lodash as _, Storage } from "@nsnanocat/util";
 import { URL } from "@nsnanocat/url";
 import database from "./function/database.mjs";
 import setENV from "./function/setENV.mjs";
+import detectPlatform from "./function/detectPlatform.mjs";
 // 构造回复数据
 // biome-ignore lint/style/useConst: <explanation>
 let $response = undefined;
@@ -78,6 +79,40 @@ Console.info(`FORMAT: ${FORMAT}`);
 												case "accounts":
 													switch (PATHs[2]) {
 														case "settings":
+															switch (PATHs[3]) {
+																case "notifications":
+																	switch (PATHs[4]) {
+																		case "apps":
+																			switch (PATHs[5]) {
+																				case undefined:
+																					Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/settings/notifications/apps`);
+																					break;
+																				default:
+																					Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/settings/notifications/apps/${PATHs[5]}`);
+																					switch (Settings.MergeNotifications) {
+																						case true:
+																						default: {
+																							Console.info("合并通知");
+																							const Platform = detectPlatform($request.headers?.["User-Agent"] ?? $request.headers?.["user-agent"]);
+																							const EmailEnabled = _.get(body, `platformUpdates.${Platform}.emailEnabled`);
+																							Console.info(`EmailEnabled: ${EmailEnabled}`);
+																							_.set(body, "platformUpdates.appletvos.emailEnabled", EmailEnabled);
+																							_.set(body, "platformUpdates.ios.emailEnabled", EmailEnabled);
+																							_.set(body, "platformUpdates.osx.emailEnabled", EmailEnabled);
+																							_.set(body, "platformUpdates.xros.emailEnabled", EmailEnabled);
+																							break;
+																						}
+																						case false:
+																							Console.info("不合并通知");
+																							break;
+																					}
+																					break;
+																			}
+
+																			break;
+																	}
+																	break;
+															}
 															break;
 														case Caches?.data?.accountId: // UUID
 														default:
@@ -126,7 +161,6 @@ Console.info(`FORMAT: ${FORMAT}`);
 		case "GET":
 		case "HEAD":
 		case "OPTIONS":
-		case undefined: // QX牛逼，script-echo-response不返回method
 		default:
 			// 主机判断
 			switch (url.hostname) {
