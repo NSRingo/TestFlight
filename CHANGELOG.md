@@ -1,15 +1,10 @@
-### 🛠️ Bug Fixes
-  * 修复 `$argument` 和 `$persistentStore` 载入顺序颠倒的问题
-    * 正确顺序为先读取 `$argument` 再读取 `$persistentStore (BoxJs)`
-    * 即，有相同键名时，`$persistentStore (BoxJs)` 的值会覆盖 `$argument` 的值
+### 🆕 New Features
+  * 新增了`总是显示安装选项`功能，可以在设置中启用
+    * 当启用此功能时，通过 Testflight 邀请加入链接的用户将始终看到`安装`选项，而不是`此 Beta 版本的测试员已满。`的提示
+    * 连续点击`安装`按钮不会触发风控
+  * 新增了`合并通知开关`功能，可以在设置中启用
+    * 当启用此功能时，`通知`-`电子邮件通知`的开关将始终控制全部平台版本的通知
+    * 用户可以通过这个功能在 iOS 平台上同步开关 tvOS 与 macOS 版本的通知
 
 ### 🔣 Dependencies
   * 升级了 `@nsnanocat/util`
-    * `util` 由 `submodule` 更改为 `package`
-    * `$platform` 改为 `$app`
-    * 使用了全新的 `Console` polyfill
-  * 升级了 `@nsnanocat/url`
-    * 使用了全新的 `URL` 和 `URLSearchParams` polyfill
-
-### 🔄 Other Changes
-  * 打包器由 `rollup` 更改为 `rspack`
