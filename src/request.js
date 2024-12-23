@@ -268,6 +268,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 								}
 								case false:
 								default:
+									Console.info("关闭多账号支持");
 									break;
 							}
 							break;

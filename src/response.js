@@ -131,6 +131,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																case undefined:
 																	switch (Settings.Universal) {
 																		case true:
+																		default:
 																			Console.info("启用通用应用支持");
 																			if (body.error === null) {
 																				// 数据无错误
@@ -149,7 +150,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																			}
 																			break;
 																		case false:
-																		default:
+																			Console.info("启用通用应用支持");
 																			break;
 																	}
 																	break;
@@ -162,6 +163,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																				case undefined:
 																					switch (Settings.Universal) {
 																						case true:
+																						default:
 																							Console.info("启用通用应用支持");
 																							if (body.error === null) {
 																								// 数据无错误
@@ -173,7 +175,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																							}
 																							break;
 																						case false:
-																						default:
+																							Console.info("关闭通用应用支持");
 																							break;
 																					}
 																					break;
@@ -201,6 +203,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																										case undefined:
 																											switch (Settings.Universal) {
 																												case true:
+																												default:
 																													Console.info("启用通用应用支持");
 																													if (body.error === null) {
 																														// 数据无错误
@@ -210,7 +213,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																													}
 																													break;
 																												case false:
-																												default:
+																													Console.info("关闭通用应用支持");
 																													break;
 																											}
 																											break;

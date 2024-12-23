@@ -107,6 +107,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 								}
 								case false:
 								default:
+									Console.info("关闭多账号支持");
 									break;
 							}
 							break;
@@ -153,6 +154,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																	Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps`);
 																	switch (Settings.Universal) {
 																		case true:
+																		default:
 																			Console.info("启用通用应用支持");
 																			if (body.error === null) {
 																				// 数据无错误
@@ -171,7 +173,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																			}
 																			break;
 																		case false:
-																		default:
+																			Console.info("启用通用应用支持");
 																			break;
 																	}
 																	break;
@@ -186,6 +188,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																					Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/builds/${PATHs[6]}`);
 																					switch (Settings.Universal) {
 																						case true:
+																						default:
 																							Console.info("启用通用应用支持");
 																							if (body.error === null) {
 																								// 数据无错误
@@ -197,7 +200,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																							}
 																							break;
 																						case false:
-																						default:
+																							Console.info("关闭通用应用支持");
 																							break;
 																					}
 																					break;
@@ -230,6 +233,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																											Console.debug(`/${PATHs[0]}/accounts/${PATHs[2]}/apps/${PATHs[4]}/platforms/${PATHs[6]}/trains/${PATHs[8]}/builds`);
 																											switch (Settings.Universal) {
 																												case true:
+																												default:
 																													Console.info("启用通用应用支持");
 																													if (body.error === null) {
 																														// 数据无错误
@@ -239,7 +243,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																													}
 																													break;
 																												case false:
-																												default:
+																													Console.info("关闭通用应用支持");
 																													break;
 																											}
 																											break;
@@ -289,6 +293,7 @@ Console.info(`FORMAT: ${FORMAT}`);
 																	break;
 																case false:
 																default:
+																	Console.info("不显示安装选项");
 																	break;
 															}
 															break;
